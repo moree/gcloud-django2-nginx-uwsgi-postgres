@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1 
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: init-db-shell
+          mountPath: /docker-entrypoint-initdb.d/myproject_web.sh
+          subPath: myproject_web.sh
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: init-db-shell
+        configMap:
+          name: init-db-shell 
+      - name: pg-data
+        gcePersistentDisk:
+          pdName: pg-disk
+          fsType: ext4

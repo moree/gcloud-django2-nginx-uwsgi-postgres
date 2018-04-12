@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1 
+kind: Deployment
+metadata:
+  name: uwsgi
+spec:
+  selector:
+    matchLabels:
+      app: uwsgi
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      # unlike pod-nginx.yaml, the name is not included in the meta data as a unique name is
+      # generated from the deployment name
+      labels:
+        app: uwsgi
+    spec:
+      containers:
+      - name: uwsgi
+        image: gcr.io/django2-200105/django_uwsgi:v1
+        ports:
+        - containerPort: 8000
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        command : ["supervisord", "-n", "-c", "/home/docker/code/supervisor-app.conf"]

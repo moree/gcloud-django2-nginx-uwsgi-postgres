@@ -1,0 +1,11 @@
+version: '2.0'
+
+volumes:
+    static:
+    
+services:
+
+    webapp:
+        restart: always
+        build: webapp
+        image: gcr.io/django2-200105/django_uwsgi:v1
