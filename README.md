@@ -13,7 +13,7 @@ Ex. 'django2-200105'
 ### Config
 ```
 gcloud config set project django2-200105
-gcloud config set compute/zone us-central1-b
+gcloud config set compute/zone asia-northeast1-a
 ```
 
 ### Create clusters

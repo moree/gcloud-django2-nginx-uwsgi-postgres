@@ -37,13 +37,18 @@ RUN apk add bash \
     pip3 install --upgrade pip setuptools && \
     rm -r /root/.cache
 
+#user add
+RUN addgroup -S uwsgi && adduser -S uwsgi -G uwsgi
+
 # install uwsgi now because it takes a little while
 RUN pip3 install uwsgi
 
 # setup all the configfiles
 COPY supervisor-app.conf /etc/supervisor/conf.d/
 
+# source copy
 ADD ./sources /var/www/
+RUN chown -R uwsgi /var/www/djangopj
 
 # COPY requirements.txt and RUN pip install BEFORE adding the rest of your code, this will cause Docker's caching mechanism
 # to prevent re-installing (all your) dependencies when you made a change a line or two in your app.
